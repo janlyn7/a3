@@ -68,7 +68,7 @@
                     </div>
                 </div>
 
-                <div id='row'>
+                <div class='row'>
                     <div class='six columns' id='calc_button'>
                         <input type='submit' value='calculate' name='act'>
                     </div>
@@ -79,7 +79,7 @@
 
 
             @if ((isset($_GET['act']) && ($_GET['act'] == 'calculate') && isset($ppBill) && !isset($errmsgs)))
-                <div id='row'>
+                <div class='row'>
                     <div class='three columns'>
                         <p></p>
                     </div>
@@ -89,7 +89,7 @@
                 </div>
 
 	    @elseif ((isset($_GET['act']) && ($_GET['act'] == 'calculate') && isset($errmsgs) && (count($errmsgs) > 0)))
-                <div id='row'>
+                <div class='row'>
                     <div class='three columns'>
                         <p></p>
                     </div>
