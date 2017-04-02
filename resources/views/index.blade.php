@@ -31,7 +31,7 @@
                         <p>Required*</p>
                     </div>
                     <div class='six columns'>
-                        <input type='text' name='totalBill' autofocus value={{ $totalBill }}>
+                        <input type='text' name='totalBill' autofocus value={{ $totalBill or 0 }}>
                     </div>
                 </div>
 
@@ -41,7 +41,7 @@
                         <p>Required*</p>
                     </div>
                     <div class='six columns'>
-                        <input type='text' name='numPeople' value={{ $numPeople }}>
+                        <input type='text' name='numPeople' value={{ $numPeople or 1 }}>
                     </div>
                 </div>
 
@@ -77,20 +77,34 @@
                     </div>
                 </div>
 
-            </div>
 
-        @if ((isset($_GET['act']) && ($_GET['act'] == 'calculate') && isset($ppBill)))
-            <div id='row'>
-                <div class='three columns'>
-                    <p></p>
+            @if ((isset($_GET['act']) && ($_GET['act'] == 'calculate') && isset($ppBill) && !isset($errmsgs)))
+                <div id='row'>
+                    <div class='three columns'>
+                        <p></p>
                     </div>
-                        <div class='six columns' id='results'>
-                            <h4>Each person pays {{ $ppBill }} </h4>
-                        </div>
+                    <div class='six columns' id='results'>
+                        <h4>Each person pays ${{ $ppBill }} </h4>
                     </div>
-		</div>
+                </div>
+
+	    @elseif ((isset($_GET['act']) && ($_GET['act'] == 'calculate') && isset($errmsgs) && (count($errmsgs) > 0)))
+                <div id='row'>
+                    <div class='three columns'>
+                        <p></p>
+                    </div>
+                    <div class='six columns' id='errors'>
+                        <h5>Errors:</h5>
+                        <ul>
+                            @foreach ($errmsgs->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                 </div>
+	    @endif
+
             </div>
-	@endif
 
         </form>
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Validator;
 
 class BillSplitterController extends Controller
 {
@@ -32,32 +33,41 @@ class BillSplitterController extends Controller
 	  	  ];
 
         $ppBill = 0;
-        $errors = '';
-
+        $errmsgs = null;
 
         $totalBill = $request->input('totalBill', 0);
         $numPeople = $request->input('numPeople', 1);
-
-	$tip = $request->input('tip', 'good');
-
 	if ($request->has('roundUp'))
 	   $roundUp = 'CHECKED';
 	else
 	   $roundUp = '';
+	$tip = $request->input('tip', 'good');
 
-        if (($request->has('act') and $request->input('act') == 'calculate')) {
-	    $service = $serviceType[$tip];  
 
-	    // calculate bill per person with tip
-            $ppBill = ($totalBill+ ($totalBill * $service)) / $numPeople;
+	$rules = array(
+       	    'totalBill' => 'required|numeric|min:0|max:10000',
+       	    'numPeople' => 'required|integer|min:1|max:20',
+        );
 
-            // round up to whole dollar amount, if requested
-	    if ($roundUp == 'CHECKED')
-                $ppBill = ceil($ppBill);
+	$validator = Validator::make($request->input(), $rules);
 
-	    // format bill per person in USD notation
-            $ppBill = number_format($ppBill, 2, ".", "");
+        // get the error messages from the validator
+	if ($validator->fails()) {
+            $errmsgs = $validator->messages();
+	} else {
+            if (($request->has('act') and $request->input('act') == 'calculate')) {
+	        $service = $serviceType[$tip];  
 
+	        // calculate bill per person with tip
+                $ppBill = ($totalBill+ ($totalBill * $service)) / $numPeople;
+
+                // round up to whole dollar amount, if requested
+	        if ($roundUp == 'CHECKED')
+                    $ppBill = ceil($ppBill);
+
+	        // format bill per person in USD notation
+                $ppBill = number_format($ppBill, 2, ".", "");
+	    }
 	}
 
         return view('index')->with([
@@ -66,7 +76,7 @@ class BillSplitterController extends Controller
 	     'tip'       => $tip,
 	     'roundUp'   => $roundUp,
 	     'ppBill'    => $ppBill,
-	     'errors'    => $errors,
+	     'errmsgs'   => $errmsgs,
 	]);
     }
 
