@@ -11,4 +11,4 @@
 |
 */
 
-Route::get('/', 'BillSplitter@index');
+Route::get('/', 'BillSplitterController@index');

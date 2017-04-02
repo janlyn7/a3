@@ -12,3 +12,4 @@
 */
 
 Route::get('/', 'BillSplitterController@index');
+Route::get('/index.blade.php', 'BillSplitterController@index');
