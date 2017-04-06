@@ -11,8 +11,8 @@ class BillSplitterController extends Controller
     // main routine for displaying Split the Check calculator
     public function index(Request $request) {
 
-    	// if action == reset, return view with cleared/default field inputs
-	if (($request->has('act') and $request->input('act') == 'reset')) {
+    	// if there is no action or action == reset, return view with cleared/default field inputs
+	if ( (!$request->has('act')) or (($request->has('act') and $request->input('act') == 'reset'))) {
 	   return view('index')->with([
              'totalBill' => 0,
              'numPeople' => 1,
